@@ -10,6 +10,7 @@ import Modelo.ProductoDAO;
 import Modelo.Venta;
 import Modelo.VentaDAO;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +26,7 @@ public class Controlador extends HttpServlet {
     Producto p = new Producto();
     ProductoDAO pDAO = new ProductoDAO();
     int id;
+    LocalDate fecha = LocalDate.now();
 
     Venta v = new Venta();
     VentaDAO vDAO = new VentaDAO();
@@ -257,26 +259,56 @@ public class Controlador extends HttpServlet {
 
                     v = new Venta();
                     v.setItem(item);
-                    v.setId(cod);
+                    v.setIdProducto(cod);
                     v.setDescripcionP(descripcion);
                     v.setPrecio(precioP);
                     v.setCant(cant);
                     v.setSubTotal(subTotal);
                     listaV.add(v);
 
-                    for (int i = 0; i < listaV.size(); i++)
+                    for (int i = 0; i<listaV.size(); i++)
                         total += listaV.get(i).getSubTotal();
                     
                     request.setAttribute("total", total);
                     request.setAttribute("listaV",listaV);
                     break;
                 case "Cancelar":
+                    item = 0;
+                    total = 0;
                     listaV.clear();
                     break;
                 case "Limpiar":
                     request.setAttribute("c", c);
                     request.setAttribute("total", total);
                     request.setAttribute("listaV",listaV);
+                    break;
+                case "Generar Venta":
+                    v.setIdCliente(c.getId());
+                    v.setIdEmpleado(1);
+                    v.setNumSerie(noSerie);
+                    v.setFecha(fecha.toString());
+                    v.setMonto(total);
+                    v.setEstado("1");
+                    
+                    vDAO.guardarVenta(v);
+                         
+                    String idVentas = vDAO.idVentas();
+                    
+                    if(idVentas==null)
+                        idVentas = "1";
+                    
+                    for(int i=0; i<listaV.size(); i++){
+                        v = new Venta();
+                        v.setId(Integer.parseInt(idVentas));
+                        v.setIdProducto(listaV.get(i).getIdProducto());
+                        v.setCant(listaV.get(i).getCant());
+                        v.setPrecio(listaV.get(i).getPrecio());
+                        vDAO.guardarDetalleVenta(v);
+                    }
+                    
+                    listaV.clear();
+                    total = 0;
+                    item = 0;
                     break;
                 default:
                     noSerie = vDAO.generarSerie();

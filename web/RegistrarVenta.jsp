@@ -100,7 +100,7 @@
                                 <c:forEach var="v" items="${listaV}">
                                     <tr>
                                         <td>${v.getItem()}</td>
-                                        <td>${v.getId()}</td>
+                                        <td>${v.getIdProducto()}</td>
                                         <td>${v.getDescripcionP()}</td>
                                         <td>${v.getPrecio()}</td>
                                         <td>${v.getCant()}</td>
