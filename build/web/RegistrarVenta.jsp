@@ -68,7 +68,7 @@
 
                             <div class="form-group">
                                 <input class="btn btn-info rounded-pill" type="submit" name="accion" value="Agregar">
-                                <a class="btn btn-secondary rounded-pill" href="Controlador?menu=NuevaVenta&accion=Limpiar">Limpiar</a>
+                                <a class="btn btn-secondary rounded-pill" href="Controlador?menu=NuevaVenta&accion=Limpiar">Limpiar/Actualizar</a>
                             </div>
                         </div>
                     </form>

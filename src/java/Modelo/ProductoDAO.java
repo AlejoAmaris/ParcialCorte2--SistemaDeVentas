@@ -12,6 +12,20 @@ public class ProductoDAO{
     PreparedStatement ps = null;
     ResultSet rs = null;
     int r;
+        
+    public int actualizarStock(int idProducto,int stock){
+        try{
+            ps = con.prepareStatement("UPDATE Producto SET Stock = ? WHERE (IdProducto = ?)");
+            ps.setInt(1,stock);
+            ps.setInt(2,idProducto);
+            ps.executeUpdate();
+        } 
+        catch(Exception e){
+            System.out.println("ERROR al leer la Tabla producto\n"+e);
+        }
+        
+        return r;
+    }
     
     //Op. del CRUD
     

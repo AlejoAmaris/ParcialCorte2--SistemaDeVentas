@@ -283,6 +283,17 @@ public class Controlador extends HttpServlet {
                     request.setAttribute("listaV",listaV);
                     break;
                 case "Generar Venta":
+                    for(int i=0; i<listaV.size(); i++){
+                       p = new Producto();
+                       int cantidad = listaV.get(i).getCant();
+                       int idProducto  = listaV.get(i).getIdProducto(); 
+                       
+                       p = pDAO.listarId(idProducto);
+                       int stockActualizado = p.getStock() - cantidad;
+                       
+                       pDAO.actualizarStock(idProducto,stockActualizado);
+                    }
+                    
                     v.setIdCliente(c.getId());
                     v.setIdEmpleado(1);
                     v.setNumSerie(noSerie);
@@ -292,14 +303,11 @@ public class Controlador extends HttpServlet {
                     
                     vDAO.guardarVenta(v);
                          
-                    String idVentas = vDAO.idVentas();
-                    
-                    if(idVentas==null)
-                        idVentas = "1";
+                    int idVentas = Integer.parseInt(vDAO.idVentas());
                     
                     for(int i=0; i<listaV.size(); i++){
                         v = new Venta();
-                        v.setId(Integer.parseInt(idVentas));
+                        v.setId(idVentas);
                         v.setIdProducto(listaV.get(i).getIdProducto());
                         v.setCant(listaV.get(i).getCant());
                         v.setPrecio(listaV.get(i).getPrecio());
