@@ -9,6 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">        
         <link rel="stylesheet" type="text/css" href="Estilos/estiloFunNav.css"/>
+        <link rel="stylesheet" type="text/css" href="Estilos/estiloGenerarRecibo.css"/>
         <title>JSP Page</title>
     </head>
 
@@ -18,7 +19,7 @@
         </div>
 
         <div class="d-flex pr-1 pl-1 pb-5 pt-1">
-            <div class="col-sm-5">
+            <div class="form col-sm-5">
                 <div class="card">
                     <form action="Controlador?menu=NuevaVenta" method="post">
                         <div class="card-body">
@@ -93,7 +94,7 @@
                                     <th>Precio</th>
                                     <th>Cantidad</th>
                                     <th>SubTotal</th>
-                                    <th>Acciones</th>
+                                    <th class="colAccion">Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -117,7 +118,7 @@
 
                     <div class="card-footer d-flex">
                         <div class="col-sm-6">
-                            <a class="btn btn-success rounded-pill" href="Controlador?menu=NuevaVenta&accion=Generar+Venta">Generar Venta</a>
+                            <a class="btn btn-success rounded-pill" onclick="print()" href="Controlador?menu=NuevaVenta&accion=Generar+Venta">Generar Venta</a>
                             <a class="btn btn-danger rounded-pill" href="Controlador?menu=NuevaVenta&accion=Cancelar">Cancelar</a>
                         </div>
 

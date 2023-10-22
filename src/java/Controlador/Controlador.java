@@ -1,6 +1,6 @@
 package Controlador;
 
-import Config.GenerarSerie;
+import Config.Asignaciones;
 import Modelo.Cliente;
 import Modelo.ClienteDAO;
 import Modelo.Empleado;
@@ -26,11 +26,13 @@ public class Controlador extends HttpServlet {
     Producto p = new Producto();
     ProductoDAO pDAO = new ProductoDAO();
     int id;
+    Empleado user;
     LocalDate fecha = LocalDate.now();
 
     Venta v = new Venta();
     VentaDAO vDAO = new VentaDAO();
     ArrayList<Venta> listaV = new ArrayList<>();
+    Asignaciones a = new Asignaciones();
     int cod,cant,item;
     String descripcion,noSerie;
     double precioP, subTotal, total;
@@ -42,6 +44,7 @@ public class Controlador extends HttpServlet {
         String menu = request.getParameter("menu");
 
         if (menu.equals("Principal")) {
+            user = (Empleado) request.getAttribute("user");
             request.getRequestDispatcher("/Principal.jsp").forward(request, response);
         }
 
@@ -234,6 +237,7 @@ public class Controlador extends HttpServlet {
                     c.setDni(dni);
                     c = cDAO.buscar(dni);
 
+                    request.setAttribute("noSerie",noSerie);
                     request.setAttribute("c", c);
                     break;
                 case "Buscar Producto":
@@ -241,6 +245,7 @@ public class Controlador extends HttpServlet {
 
                     p = pDAO.listarId(id);
                     
+                    request.setAttribute("noSerie",noSerie);
                     request.setAttribute("total", total);
                     request.setAttribute("listaV",listaV);
                     request.setAttribute("c", c);
@@ -248,7 +253,7 @@ public class Controlador extends HttpServlet {
                     break;
                 case "Agregar":
                     request.setAttribute("c", c);
-                    
+                            
                     item += 1;
                     total = 0;
                     cod = Integer.parseInt(request.getParameter("codigoProducto"));
@@ -269,6 +274,8 @@ public class Controlador extends HttpServlet {
                     for (int i = 0; i<listaV.size(); i++)
                         total += listaV.get(i).getSubTotal();
                     
+                    a.actualizarStrock(listaV);
+                    request.setAttribute("noSerie",noSerie);
                     request.setAttribute("total", total);
                     request.setAttribute("listaV",listaV);
                     break;
@@ -276,26 +283,19 @@ public class Controlador extends HttpServlet {
                     item = 0;
                     total = 0;
                     listaV.clear();
+                    request.setAttribute("noSerie",noSerie);
                     break;
                 case "Limpiar":
+                    request.setAttribute("noSerie",noSerie);
                     request.setAttribute("c", c);
                     request.setAttribute("total", total);
                     request.setAttribute("listaV",listaV);
                     break;
                 case "Generar Venta":
-                    for(int i=0; i<listaV.size(); i++){
-                       p = new Producto();
-                       int cantidad = listaV.get(i).getCant();
-                       int idProducto  = listaV.get(i).getIdProducto(); 
-                       
-                       p = pDAO.listarId(idProducto);
-                       int stockActualizado = p.getStock() - cantidad;
-                       
-                       pDAO.actualizarStock(idProducto,stockActualizado);
-                    }
+                    a.actualizarStrock(listaV);
                     
                     v.setIdCliente(c.getId());
-                    v.setIdEmpleado(1);
+                    v.setIdEmpleado(user.getId());
                     v.setNumSerie(noSerie);
                     v.setFecha(fecha.toString());
                     v.setMonto(total);
@@ -314,23 +314,16 @@ public class Controlador extends HttpServlet {
                         vDAO.guardarDetalleVenta(v);
                     }
                     
+                    noSerie = a.noSerie();
+                    request.setAttribute("noSerie",noSerie);
                     listaV.clear();
                     total = 0;
                     item = 0;
                     break;
                 default:
-                    noSerie = vDAO.generarSerie();
-                    
-                    if(noSerie == null)
-                        noSerie = "000000001";
-                    else{
-                        int incrementar = Integer.parseInt(noSerie);
-                        GenerarSerie gs = new GenerarSerie();
-                        
-                        noSerie = gs.noSerie(incrementar);
-                    }
-                    
+                    noSerie = a.noSerie();
                     request.setAttribute("noSerie",noSerie);
+                    
                     break;
             }
             
