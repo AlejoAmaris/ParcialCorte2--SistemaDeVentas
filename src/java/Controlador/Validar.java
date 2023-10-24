@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import Modelo.EmpleadoDAO;
+import javax.servlet.http.HttpSession;
 
 public class Validar extends HttpServlet {
 
@@ -27,6 +28,7 @@ public class Validar extends HttpServlet {
 
         EmpleadoDAO eDAO = new EmpleadoDAO();
         Empleado e = new Empleado();
+        HttpSession sesion = request.getSession();
         String accion = request.getParameter("accion");
 
         if (accion.equals("Ingresar")) {
@@ -36,14 +38,18 @@ public class Validar extends HttpServlet {
             e = eDAO.validar(usuario, clave);
 
             if (e.getUsuario() != null) {
-                request.setAttribute("user", e);
+                sesion.setAttribute("user", e);
                 request.getRequestDispatcher("Controlador?menu=Principal").forward(request, response);
             } 
-            else
+            else{
+                sesion.invalidate();
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
+            }
         } 
-        else 
+        else{ 
+            sesion.invalidate();
             request.getRequestDispatcher("/index.jsp").forward(request, response);
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class Controlador extends HttpServlet {
 
@@ -44,13 +45,13 @@ public class Controlador extends HttpServlet {
         String menu = request.getParameter("menu");
 
         if (menu.equals("Principal")) {
-            user = (Empleado) request.getAttribute("user");
+            HttpSession sesion = request.getSession();
+            user = (Empleado) sesion.getAttribute("user");
             request.getRequestDispatcher("/Principal.jsp").forward(request, response);
         }
 
         if (menu.equals("Inicio")) {
-            String user = request.getParameter("user");
-
+            request.setAttribute("user",user);
             request.getRequestDispatcher("/Inicio.jsp").forward(request, response);
         }
 
@@ -270,11 +271,9 @@ public class Controlador extends HttpServlet {
                     v.setCant(cant);
                     v.setSubTotal(subTotal);
                     listaV.add(v);
-
                     for (int i = 0; i<listaV.size(); i++)
                         total += listaV.get(i).getSubTotal();
                     
-                    a.actualizarStrock(listaV);
                     request.setAttribute("noSerie",noSerie);
                     request.setAttribute("total", total);
                     request.setAttribute("listaV",listaV);

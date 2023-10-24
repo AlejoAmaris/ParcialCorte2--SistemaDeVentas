@@ -12,14 +12,12 @@
     </head>
 
     <body>
-        <%String user = request.getParameter("user");%>
-
         <div class="container col-lg-7 vh-100 d-flex justify-content-center align-items-center">
             <div class="inicio col-sm-10 text-center">
                 <div class="card-body">
                     <div class="form-group">
                         <h2>
-                            <b>Bienvenido/a <%=user%></b>
+                            <b>Bienvenido/a ${user.getNombre()}</b>
                         </h2>
                         
                         <hr style="border: 1px solid white"> 

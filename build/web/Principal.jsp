@@ -1,4 +1,12 @@
+<%@page import="Modelo.Empleado"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
+<%
+    HttpSession sesion = request.getSession();
+    Empleado e = (Empleado) sesion.getAttribute("user");
+
+    if (e != null){
+%>
 
 <!DOCTYPE html>
 
@@ -18,12 +26,12 @@
                     <li class="nav-item active">
                         <a class="nav-link" href="#"><span class="sr-only">(current)</span></a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a style="margin-left:10px; border:none; border-radius: 20px" class="btn btn-outline-light" 
-                           href="Controlador?menu=Inicio&accion=default&user=${user.getNombre()}" target="frame">Inicio</a>
+                           href="Controlador?menu=Inicio&accion=default" target="frame">Inicio</a>
                     </li>
-                    
+
                     <li class="nav-item">
                         <a style="margin-left: 10px; border:none; border-radius: 20px" class="btn btn-outline-light" 
                            href="Controlador?menu=Producto&accion=Listar" target="frame">Productos</a>
@@ -76,3 +84,10 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
     </body>
 </html>
+<%
+    }
+    else{
+        sesion.invalidate();
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
+    }
+%>
