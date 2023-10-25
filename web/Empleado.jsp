@@ -49,6 +49,11 @@
                             <label>Usuario</label>
                             <input class="form-control rounded-pill" type="text" name="usuario" value="${empleado.getUsuario()}" required>
                         </div>
+                        
+                        <div class="form-group">
+                            <label>Clave</label>
+                            <input class="form-control rounded-pill" type="password" name="clave" value="${empleado.getClave()}" required>
+                        </div>
 
                         <input class="btn btn-info rounded-pill" type="submit" name="accion" value="Agregar">
                        <input class="btn btn-success rounded-pill" type="submit" name="accion" value="Actualizar">
