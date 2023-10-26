@@ -1,5 +1,13 @@
+<%@page import="Modelo.Empleado"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%
+    HttpSession sesion = request.getSession();
+    Empleado e = (Empleado) sesion.getAttribute("user");
+
+    if (e != null){
+%>
 
 <!DOCTYPE html>
 
@@ -136,3 +144,11 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
     </body>
 </html>
+<%
+    }
+    else{
+        sesion.removeAttribute("user");
+        sesion.invalidate();
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
+    }
+%>

@@ -13,13 +13,13 @@ public class EmpleadoDAO{
     ResultSet rs = null;
     int r;
     
-    public Empleado validar(String usuario,String clave){
+    public Empleado validar(Empleado item){
         Empleado emp = new Empleado();
         
         try{
-            ps = con.prepareStatement("SELECT * FROM Empleado WHERE ((User = ?) AND (Dni = ?))");
-            ps.setString(1,usuario);
-            ps.setString(2,clave);
+            ps = con.prepareStatement("SELECT * FROM Empleado WHERE ((User = ?) AND (Clave = ?))");
+            ps.setString(1,item.getUsuario());
+            ps.setString(2,item.getClave());
             rs = ps.executeQuery();
             
             while(rs.next()){
@@ -53,6 +53,7 @@ public class EmpleadoDAO{
                 e.setTel(rs.getString(4));
                 e.setEstado(rs.getString(5));
                 e.setUsuario(rs.getString(6));
+                e.setClave(rs.getString(7));
                 
                 listaE.add(e);
             }
@@ -65,13 +66,14 @@ public class EmpleadoDAO{
     }
     public int agregar(Empleado emp){
         try{
-            ps = con.prepareStatement("INSERT INTO Empleado (Dni,Nombres,Telefono,Estado,User)"
-                +"VALUES (?,?,?,?,?)");
+            ps = con.prepareStatement("INSERT INTO Empleado (Dni,Nombres,Telefono,Estado,User,Clave)"
+                +"VALUES (?,?,?,?,?,?)");
             ps.setString(1,emp.getDni());
             ps.setString(2,emp.getNombre());
             ps.setString(3,emp.getTel());
             ps.setString(4,emp.getEstado());
             ps.setString(5,emp.getUsuario());
+            ps.setString(6,emp.getClave());
             ps.executeUpdate();
         } 
         catch(Exception e){
@@ -94,6 +96,7 @@ public class EmpleadoDAO{
                 emp.setTel(rs.getString(4));
                 emp.setEstado(rs.getString(5));
                 emp.setUsuario(rs.getString(6));
+                emp.setClave(rs.getString(7));
             }
         } 
         catch(Exception e){
@@ -104,13 +107,14 @@ public class EmpleadoDAO{
     }
     public int actualizar(Empleado emp){        
         try{
-            ps = con.prepareStatement("UPDATE Empleado SET Dni = ?,Nombres = ?, Telefono = ?,Estado = ?, User = ? WHERE (IdEmpleado = ?)");
+            ps = con.prepareStatement("UPDATE Empleado SET Dni = ?,Nombres = ?, Telefono = ?,Estado = ?, User = ?, Clave = ? WHERE (IdEmpleado = ?)");
             ps.setString(1,emp.getDni());
             ps.setString(2,emp.getNombre());
             ps.setString(3,emp.getTel());
             ps.setString(4,emp.getEstado());
             ps.setString(5,emp.getUsuario());
-            ps.setInt(6,emp.getId());
+            ps.setString(6,emp.getClave());
+            ps.setInt(7,emp.getId());
             ps.executeUpdate();
         } 
         catch(Exception e){

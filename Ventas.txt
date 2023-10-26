@@ -21,6 +21,7 @@ CREATE TABLE Empleado(
   Telefono varchar(20) NOT NULL,
   Estado varchar(1) NOT NULL,
   User varchar(8) NOT NULL,
+  Clave varchar(200) NOT NULL,
 
   PRIMARY KEY (IdEmpleado) 
 );
@@ -70,10 +71,10 @@ INSERT INTO `cliente` (`IdCliente`, `Dni`, `Nombres`, `Direccion`, `Estado`) VAL
 (19, '3', 'Andres de Santa Cruz', 'Av. La Frontera 347', '1'),
 (20, '4', 'Andres Mendoza', 'Chosica, Lurigancho', '1');
 
-INSERT INTO `empleado` (`IdEmpleado`, `Dni`, `Nombres`, `Telefono`, `Estado`, `User`) VALUES
-(1, '123', 'Pedro Hernandez', '988252459', '1', 'emp01'),
-(2, '123', 'Roman Riquelme', '988252459', '1', 'Jo46'),
-(3, '123', 'Palermo Suarez', '453536458', '1', 'Em22');
+INSERT INTO `empleado` (`IdEmpleado`, `Dni`, `Nombres`, `Telefono`, `Estado`, `User`,`Clave`) VALUES
+(1, '123', 'Pedro Hernandez', '988252459', '1', 'emp01','pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM='),
+(2, '123', 'Roman Riquelme', '988252459', '1', 'Jo46','pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM='),
+(3, '123', 'Palermo Suarez', '453536458', '1', 'Em22','pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=');
 
 INSERT INTO `producto` (`IdProducto`, `Nombres`, `Precio`, `Stock`, `Estado`) VALUES
 (1, 'Teclado Logitech 345 Editado', 150, 99, '1'),

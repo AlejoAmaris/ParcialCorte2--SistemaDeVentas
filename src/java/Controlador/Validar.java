@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import Modelo.EmpleadoDAO;
+import java.security.MessageDigest;
+import java.util.Base64;
 import javax.servlet.http.HttpSession;
 
 public class Validar extends HttpServlet {
@@ -33,25 +35,45 @@ public class Validar extends HttpServlet {
 
         if (accion.equals("Ingresar")) {
             String usuario = request.getParameter("usuario");
-            String clave = request.getParameter("clave");
+            String clave = asegurarClave(request.getParameter("clave"));
 
-            e = eDAO.validar(usuario, clave);
+            e.setUsuario(usuario);
+            e.setClave(clave);
+            e = eDAO.validar(e);
 
             if (e.getUsuario() != null) {
                 sesion.setAttribute("user", e);
                 request.getRequestDispatcher("Controlador?menu=Principal").forward(request, response);
             } 
             else{
+                sesion.removeAttribute("user");
                 sesion.invalidate();
                 request.getRequestDispatcher("/index.jsp").forward(request, response);
             }
         } 
         else{ 
+            sesion.removeAttribute("user");
             sesion.invalidate();
             request.getRequestDispatcher("/index.jsp").forward(request, response);
         }
     }
-
+    
+    private String asegurarClave(String clave){
+        String claveSHA = null;
+        
+        try{
+            MessageDigest sha256 = MessageDigest.getInstance("SHA-256"); //Instanciamos el tipo de Hash
+            sha256.update(clave.getBytes()); //Pasa la clave a bytes
+            
+            claveSHA = Base64.getEncoder().encodeToString(sha256.digest());
+        } 
+        catch(Exception e){
+            System.out.println("ERROR en el SHA256\n"+e);
+        }
+        
+        return claveSHA;
+    }
+    
     @Override
     public String getServletInfo() {
         return "Short description";

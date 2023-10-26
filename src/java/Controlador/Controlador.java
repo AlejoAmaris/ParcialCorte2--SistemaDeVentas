@@ -10,8 +10,10 @@ import Modelo.ProductoDAO;
 import Modelo.Venta;
 import Modelo.VentaDAO;
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Base64;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +30,7 @@ public class Controlador extends HttpServlet {
     ProductoDAO pDAO = new ProductoDAO();
     int id;
     Empleado user;
+    HttpSession sesion;
     LocalDate fecha = LocalDate.now();
 
     Venta v = new Venta();
@@ -56,6 +59,8 @@ public class Controlador extends HttpServlet {
         }
 
         if (menu.equals("Empleado")) {
+            request.setAttribute("user",user);
+            
             switch (accion) {
                 case "Listar":
                     ArrayList<Empleado> listaE = eDAO.listar();
@@ -67,12 +72,14 @@ public class Controlador extends HttpServlet {
                     String tel = request.getParameter("tel");
                     String estado = request.getParameter("estado");
                     String usuario = request.getParameter("usuario");
-
+                    String clave = asegurarClave(request.getParameter("clave"));
+                    
                     e.setDni(dni);
                     e.setNombre(nombre);
                     e.setTel(tel);
                     e.setEstado(estado);
                     e.setUsuario(usuario);
+                    e.setClave(clave);
 
                     eDAO.agregar(e);
                     request.getRequestDispatcher("Controlador?menu=Empleado&accion=Listar").forward(request, response);
@@ -91,6 +98,7 @@ public class Controlador extends HttpServlet {
                     String tel1 = request.getParameter("tel");
                     String estado1 = request.getParameter("estado");
                     String usuario1 = request.getParameter("usuario");
+                    String clave1 = asegurarClave(request.getParameter("clave"));
                     id = Integer.parseInt(request.getParameter("ID"));
 
                     e.setDni(dni1);
@@ -98,6 +106,7 @@ public class Controlador extends HttpServlet {
                     e.setTel(tel1);
                     e.setEstado(estado1);
                     e.setUsuario(usuario1);
+                    e.setClave(clave1);
                     e.setId(id);
 
                     eDAO.actualizar(e);
@@ -117,6 +126,8 @@ public class Controlador extends HttpServlet {
         }
 
         if (menu.equals("Cliente")) {
+            request.setAttribute("user",user);
+            
             switch (accion) {
                 case "Listar":
                     ArrayList<Cliente> listaC = cDAO.listar();
@@ -174,6 +185,8 @@ public class Controlador extends HttpServlet {
         }
 
         if (menu.equals("Producto")) {
+            request.setAttribute("user",user);
+            
             switch (accion) {
                 case "Listar":
                     ArrayList<Producto> listaP = pDAO.listar();
@@ -231,6 +244,8 @@ public class Controlador extends HttpServlet {
         }
 
         if (menu.equals("NuevaVenta")) {
+            request.setAttribute("user",user);
+            
             switch (accion) {
                 case "Buscar Cliente":
                     String dni = request.getParameter("codigoCliente");
@@ -330,6 +345,22 @@ public class Controlador extends HttpServlet {
         }
     }
 
+    private String asegurarClave(String clave){
+        String claveSHA = null;
+        
+        try{
+            MessageDigest sha256 = MessageDigest.getInstance("SHA-256"); //Instanciamos el tipo de Hash
+            sha256.update(clave.getBytes()); //Pasa la clave a bytes
+            
+            claveSHA = Base64.getEncoder().encodeToString(sha256.digest());
+        } 
+        catch(Exception e){
+            System.out.println("ERROR en el SHA256\n"+e);
+        }
+        
+        return claveSHA;
+    }
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

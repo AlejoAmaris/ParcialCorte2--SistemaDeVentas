@@ -1,5 +1,13 @@
+<%@page import="Modelo.Empleado"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+<%
+    HttpSession sesion = request.getSession();
+    Empleado e = (Empleado) sesion.getAttribute("user");
+
+    if (e != null){
+%>
 
 <!DOCTYPE html>
 
@@ -52,12 +60,12 @@
                         
                         <div class="form-group">
                             <label>Clave</label>
-                            <input class="form-control rounded-pill" type="password" name="clave" value="${empleado.getClave()}" required>
+                            <input class="form-control rounded-pill" type="text" name="clave" value="${empleado.getClave()}" required>
                         </div>
-
+                        
                         <input class="btn btn-info rounded-pill" type="submit" name="accion" value="Agregar">
-                       <input class="btn btn-success rounded-pill" type="submit" name="accion" value="Actualizar">
-                       <a class="btn btn-secondary rounded-pill" href="Controlador?menu=Empleado&accion=Listar">Limpiar</a>
+                        <input class="btn btn-success rounded-pill" type="submit" name="accion" value="Actualizar">
+                        <a class="btn btn-secondary rounded-pill" href="Controlador?menu=Empleado&accion=Listar">Limpiar</a>
                     </form>
                 </div>
             </div>
@@ -100,3 +108,12 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js" integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" crossorigin="anonymous"></script>
     </body>
 </html>
+<%
+    }
+    else{
+        sesion.removeAttribute("user");
+        sesion.removeAttribute("user");
+        sesion.invalidate();
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
+    }
+%>
